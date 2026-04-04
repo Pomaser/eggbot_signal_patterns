@@ -32,24 +32,19 @@ class Individual:
         if num_wave == 0:
             return []
 
-        # Snap wavelength and modulation wavelengths to divisors of PASS_LENGTH=2000
-        # (= 3200 / egg_width_mult 1.6).  Every divisor of 2000 also divides any
-        # multiple of 2000, so all sine terms return to zero exactly at each
-        # screen-pass boundary → seamless wrap on egg AND last path ends at x=3200.
-        PASS_LENGTH = 2000
-        _DIVS = [d for d in range(1, PASS_LENGTH + 1) if PASS_LENGTH % d == 0]
-
-        def _snap(raw: int) -> int:
-            return min(_DIVS, key=lambda d: abs(d - raw))
-
-        wavelength = _snap(max(1, int(p[1] * 1000)))
-        mod_wl1 = float(_snap(max(1, int(p[3] * 1000))))
-        mod_wl2 = float(_snap(max(1, int(p[5] * 1000))))
-
-        n_passes = max(1, math.ceil(num_wave * wavelength / PASS_LENGTH))
-        total_x = n_passes * PASS_LENGTH
-
+        wavelength = max(1, int(p[1] * 1000))
         step = max(1.0, wavelength / 40.0)
+        total_x = num_wave * wavelength
+
+        # Snap modulation wavelengths to the nearest integer divisor of total_x
+        # so that all sine terms complete whole cycles → y_end == y_start (seamless on egg).
+        raw_mod_wl1 = max(1, int(p[3] * 1000))
+        n1 = max(1, round(total_x / raw_mod_wl1))
+        mod_wl1 = total_x / n1
+
+        raw_mod_wl2 = max(1, int(p[5] * 1000))
+        n2 = max(1, round(total_x / raw_mod_wl2))
+        mod_wl2 = total_x / n2
 
         use_second_mod = p[7] < 0.5
 
@@ -132,10 +127,6 @@ class Individual:
 
         if len(current) >= 2:
             segments.append(current)
-
-        # The explicit endpoint at total_x (screen x=0) produces a spurious segment
-        # with both points at x≈0.  Discard any segment whose rightmost x is negligible.
-        segments = [s for s in segments if s[-1][0] > canvas_width * 0.01]
 
         return segments
 

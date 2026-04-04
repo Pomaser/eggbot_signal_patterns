@@ -4,9 +4,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Python Project — Organic Generator GUI
 
-Located in `organic_generator/`. Run with:
+Located at the repo root. Run with:
 ```
-cd organic_generator
 python app.py
 ```
 No external dependencies — uses only Python stdlib (tkinter, math, random).
