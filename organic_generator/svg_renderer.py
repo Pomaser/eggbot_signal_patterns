@@ -34,13 +34,25 @@ def generate_svg(
 
     body = "\n".join(paths)
 
-    num_layers = 10
+    num_layers = 9
+    layer_colors = [
+        "#e63946",  # 1 červená
+        "#f4a261",  # 2 oranžová
+        "#e9c46a",  # 3 žlutá
+        "#2a9d8f",  # 4 zelená
+        "#457b9d",  # 5 modrá
+        "#9b5de5",  # 6 fialová
+        "#f72585",  # 7 růžová
+        "#4cc9f0",  # 8 světle modrá
+        "#8ecae6",  # 9 blankytná
+    ]
     layers = []
-    for i in range(1, num_layers + 1):
+    for i in range(num_layers, 0, -1):
+        color = layer_colors[i - 1]
         content = f'\n{body}\n  ' if i == 1 else ''
         layers.append(
             f'  <g inkscape:label="{i}_Layer" inkscape:groupmode="layer" id="layer{i}"'
-            f' clip-path="url(#canvas)">{content}</g>'
+            f' inkscape:color="{color}" clip-path="url(#canvas)">{content}</g>'
         )
     layers_str = "\n".join(layers)
 
