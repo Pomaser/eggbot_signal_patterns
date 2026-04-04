@@ -36,15 +36,15 @@ def generate_svg(
 
     num_layers = 9
     layer_colors = [
-        "#e63946",  # 1 červená
-        "#f4a261",  # 2 oranžová
-        "#e9c46a",  # 3 žlutá
-        "#2a9d8f",  # 4 zelená
-        "#457b9d",  # 5 modrá
-        "#9b5de5",  # 6 fialová
-        "#f72585",  # 7 růžová
-        "#4cc9f0",  # 8 světle modrá
-        "#8ecae6",  # 9 blankytná
+        "#e63946",  # 1 red
+        "#f4a261",  # 2 orange
+        "#e9c46a",  # 3 yellow
+        "#2a9d8f",  # 4 green
+        "#457b9d",  # 5 blue
+        "#9b5de5",  # 6 purple
+        "#f72585",  # 7 pink
+        "#4cc9f0",  # 8 light blue
+        "#8ecae6",  # 9 sky blue
     ]
     layers = []
     for i in range(num_layers, 0, -1):

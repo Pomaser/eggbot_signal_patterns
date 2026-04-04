@@ -55,7 +55,7 @@ class DigitalPanel(tk.Frame):
         self._type_label.pack(side="left")
 
         self._save_btn = tk.Button(
-            ctrl, text="Uložit SVG", command=self._save_svg,
+            ctrl, text="Save SVG", command=self._save_svg,
             bg=ACCENT, fg="white", relief="flat", padx=8,
         )
         self._save_btn.pack(side="right")
@@ -73,12 +73,12 @@ class DigitalPanel(tk.Frame):
             save_svg(self.individual, str(path))
             self._flash_saved(path.name)
         except OSError as exc:
-            messagebox.showerror("Chyba", f"Soubor nelze uložit:\n{exc}")
+            messagebox.showerror("Error", f"Cannot save file:\n{exc}")
 
     def _flash_saved(self, filename: str) -> None:
         btn = self._save_btn
         btn.config(text=f"✓ {filename}", bg="#27ae60")
-        btn.after(2500, lambda: btn.config(text="Uložit SVG", bg=ACCENT))
+        btn.after(2500, lambda: btn.config(text="Save SVG", bg=ACCENT))
 
     def draw(self) -> None:
         self.preview.delete("all")
@@ -119,7 +119,7 @@ class DigitalTab(tk.Frame):
         bar.pack(side="top", fill="x")
 
         tk.Button(
-            bar, text="  Nová generace  ", command=self._reset,
+            bar, text="  New Generation  ", command=self._reset,
             bg="#27ae60", fg="white", font=("sans-serif", 10, "bold"),
             relief="flat", padx=4, pady=2,
         ).pack(side="left", padx=14)
