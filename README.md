@@ -4,7 +4,7 @@
 
 Nástroj pro generování organických, digitálních a kraslicových signálů pro plotr [EggBot](http://egg-bot.com/). Výstupem jsou SVG soubory 3200 × 800 px s pojmenovanými vrstvami kompatibilními s Inkscape.
 
-![Ukázka organických křivek](src/ga_eggbot/images/generations3-5.png)
+![Ukázka organických křivek](screen_1.png)
 
 ## Spuštění
 
