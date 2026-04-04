@@ -1,6 +1,8 @@
 # Signal Generator pro EggBot
 
-Nástroj pro generování organických a digitálních signálů pro plotr [EggBot](http://egg-bot.com/). Výstupem jsou SVG soubory 3200 × 800 px s deseti pojmenovanými vrstvami kompatibilními s Inkscape.
+> **Inspirováno projektem [GA_eggbot](https://github.com/davidbliss/GA_eggbot) od Davida Blisse** — tato aplikace je jeho modifikací a rozšířením do Pythonu.
+
+Nástroj pro generování organických, digitálních a kraslicových signálů pro plotr [EggBot](http://egg-bot.com/). Výstupem jsou SVG soubory 3200 × 800 px s pojmenovanými vrstvami kompatibilními s Inkscape.
 
 ![Ukázka organických křivek](src/ga_eggbot/images/generations3-5.png)
 
@@ -17,6 +19,18 @@ python app.py
 ### Organické signály
 
 Vlnové křivky generované kombinací sinusových funkcí s amplitudovou modulací. Každý jedinec má 8 parametrů, které určují tvar vlny (vlnová délka, amplituda, modulace). Křivky se obtáčejí přes šířku plátna a překrývají se — výsledný vzor připomíná organické textury.
+
+### Kraslice
+
+Tradiční geometrické vzory inspirované českou a slovenskou kraslicařskou tradicí:
+
+| Typ | Popis |
+|-----|-------|
+| **zigzag** | Vodorovné pásy cik-cak linií |
+| **diamond** | Diamantová mřížka (dvě rodiny diagonálních čar) |
+| **waves** | Rovnoběžné sinusové vlny |
+| **chevron** | Asymetrické V-tvary (šipky) v pásech |
+| **crosshatch** | Horizontální vlny křížené s diagonálními |
 
 ### Digitální signály
 
@@ -51,6 +65,8 @@ individual.py           organický jedinec — algoritmus vlny
 generation.py           správa organické populace
 digital_individual.py   digitální jedinec — typy signálů
 digital_tab.py          GUI záložka pro digitální signály
+kraslice_individual.py  kraslicový jedinec — geometrické vzory
+kraslice_tab.py         GUI záložka pro kraslice
 svg_renderer.py         export do SVG
 src/ga_eggbot/          původní referenční implementace v Processing
 ```
