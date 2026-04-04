@@ -1,11 +1,11 @@
-from individual import Individual
+from typing import Any
 
 CANVAS_WIDTH = 3200
 CANVAS_HEIGHT = 800
 
 
 def generate_svg(
-    individual: Individual,
+    individual: Any,
     width: int = CANVAS_WIDTH,
     height: int = CANVAS_HEIGHT,
     stroke_color: str = "#1a1a1a",
@@ -13,9 +13,8 @@ def generate_svg(
 ) -> str:
     """Return SVG markup for *individual* as a string.
 
-    The wave wraps around the canvas width (egg_width_mult × 1.6), producing
-    multiple overlapping passes that create the organic dense-line pattern.
-    Each wrap is a separate <polyline> element so the SVG path is clean.
+    Works with any individual that implements compute_segments().
+    Each segment is a separate <path> element inside the first Inkscape layer.
     """
     segments = individual.compute_segments(canvas_width=width, canvas_height=height)
 
@@ -73,6 +72,6 @@ def generate_svg(
     )
 
 
-def save_svg(individual: Individual, filepath: str, **kwargs) -> None:
+def save_svg(individual: Any, filepath: str, **kwargs) -> None:
     with open(filepath, "w", encoding="utf-8") as f:
         f.write(generate_svg(individual, **kwargs))

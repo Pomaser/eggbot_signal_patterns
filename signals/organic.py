@@ -100,3 +100,8 @@ class Individual:
 
         # The last (incomplete) segment may not reach x=canvas_width — discard it.
         return segments
+
+
+class Generation:
+    def __init__(self, num_individuals: int = 12):
+        self.individuals: list[Individual] = [Individual() for _ in range(num_individuals)]

@@ -60,13 +60,15 @@ Clean digital waveforms in five variants:
 ## Project Structure
 
 ```
-app.py                  main application (Organic / Digital / Kraslice tabs)
-individual.py           organic individual — wave algorithm
-generation.py           organic population management
-digital_individual.py   digital individual — signal types
-digital_tab.py          GUI tab for digital signals
-kraslice_individual.py  kraslice individual — geometric patterns
-kraslice_tab.py         GUI tab for kraslice patterns
-svg_renderer.py         SVG export
+app.py                  entry point — creates the tabbed window
+svg_renderer.py         SVG export (works with any signal type)
+signals/
+  organic.py            Individual + Generation — wave algorithm
+  digital.py            DigitalIndividual + DigitalGeneration
+  kraslice.py           KrasliceIndividual + KrasliceGeneration
+gui/
+  organic_tab.py        Organic tab UI
+  digital_tab.py        Digital tab UI
+  kraslice_tab.py       Kraslice tab UI
 src/ga_eggbot/          original reference implementation in Processing
 ```

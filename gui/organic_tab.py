@@ -1,10 +1,8 @@
-"""Kraslice tab — drop-in tk.Frame for use inside a ttk.Notebook."""
-
 import tkinter as tk
 from tkinter import messagebox
 from pathlib import Path
 
-from kraslice_individual import KrasliceGeneration, KrasliceIndividual, PATTERN_TYPES
+from signals.organic import Individual, Generation
 from svg_renderer import save_svg
 
 # ── Layout constants ──────────────────────────────────────────────────
@@ -17,25 +15,17 @@ PREVIEW_H = 120
 SCALE_X = PREVIEW_W / CANVAS_W
 SCALE_Y = PREVIEW_H / CANVAS_H
 
-SVG_DIR = Path(__file__).parent / "svg"
+SVG_DIR = Path(__file__).parent.parent / "svg"
 
 BG = "#f0f0f0"
 PREVIEW_BG = "#ffffff"
 ACCENT = "#3a7abf"
 
-TYPE_COLORS = {
-    "zigzag":     "#c0392b",
-    "diamond":    "#e67e22",
-    "waves":      "#27ae60",
-    "chevron":    "#2980b9",
-    "crosshatch": "#8e44ad",
-}
-
 
 # ── Individual panel ──────────────────────────────────────────────────
 
-class KraslicePanel(tk.Frame):
-    def __init__(self, parent: tk.Widget, individual: KrasliceIndividual, **kw):
+class IndividualPanel(tk.Frame):
+    def __init__(self, parent: tk.Widget, individual: Individual, **kw):
         super().__init__(parent, bd=1, relief="solid", bg=BG, **kw)
         self.individual = individual
 
@@ -48,11 +38,6 @@ class KraslicePanel(tk.Frame):
         ctrl = tk.Frame(self, bg=BG)
         ctrl.pack(fill="x", padx=6, pady=(0, 6))
 
-        self._type_label = tk.Label(
-            ctrl, text="", bg=BG, font=("sans-serif", 9, "bold"), width=12, anchor="w",
-        )
-        self._type_label.pack(side="left")
-
         self._save_btn = tk.Button(
             ctrl, text="Save SVG", command=self._save_svg,
             bg=ACCENT, fg="white", relief="flat", padx=8,
@@ -63,11 +48,11 @@ class KraslicePanel(tk.Frame):
 
     def _save_svg(self) -> None:
         SVG_DIR.mkdir(exist_ok=True)
-        existing = {p.stem for p in SVG_DIR.glob("kraslice_*.svg")}
+        existing = {p.stem for p in SVG_DIR.glob("organic_*.svg")}
         n = 1
-        while f"kraslice_{n:04d}" in existing:
+        while f"organic_{n:04d}" in existing:
             n += 1
-        path = SVG_DIR / f"kraslice_{n:04d}.svg"
+        path = SVG_DIR / f"organic_{n:04d}.svg"
         try:
             save_svg(self.individual, str(path))
             self._flash_saved(path.name)
@@ -82,11 +67,6 @@ class KraslicePanel(tk.Frame):
     def draw(self) -> None:
         self.preview.delete("all")
         self.preview.create_rectangle(0, 0, PREVIEW_W, PREVIEW_H, fill=PREVIEW_BG, outline="")
-
-        pt = self.individual.pattern_type
-        color = TYPE_COLORS.get(pt, "#1a1a1a")
-        self._type_label.config(text=pt, fg=color)
-
         for seg in self.individual.compute_segments(canvas_width=CANVAS_W, canvas_height=CANVAS_H):
             if len(seg) < 2:
                 continue
@@ -94,18 +74,18 @@ class KraslicePanel(tk.Frame):
             for x, y in seg:
                 flat.append(x * SCALE_X)
                 flat.append(y * SCALE_Y)
-            self.preview.create_line(flat, fill=color, width=1, smooth=False)
+            self.preview.create_line(flat, fill="#1a1a1a", width=1, smooth=False)
 
 
-# ── Kraslice tab frame ────────────────────────────────────────────────
+# ── Organic tab ───────────────────────────────────────────────────────
 
-class KrasliceTab(tk.Frame):
-    """Complete kraslice tab content; embed in a ttk.Notebook."""
+class OrganicTab(tk.Frame):
+    """Complete organic-signal tab content; embedded in ttk.Notebook."""
 
     def __init__(self, parent: tk.Widget, **kw):
         super().__init__(parent, bg=BG, **kw)
-        self.generation = KrasliceGeneration(NUM_INDIVIDUALS)
-        self.panels: list[KraslicePanel] = []
+        self.generation = Generation(NUM_INDIVIDUALS)
+        self.panels: list[IndividualPanel] = []
 
         self._build_toolbar()
         self._build_scroll_area()
@@ -121,10 +101,6 @@ class KrasliceTab(tk.Frame):
             relief="flat", padx=4, pady=2,
         ).pack(side="left", padx=14)
 
-        for pt, color in TYPE_COLORS.items():
-            tk.Label(bar, text=f"■ {pt}", fg=color, bg="#2c3e50",
-                     font=("sans-serif", 9)).pack(side="left", padx=6)
-
     def _build_scroll_area(self) -> None:
         outer = tk.Frame(self, bg=BG)
         outer.pack(fill="both", expand=True)
@@ -138,13 +114,13 @@ class KrasliceTab(tk.Frame):
         scrollbar.config(command=self.viewport.yview)
 
         self.inner = tk.Frame(self.viewport, bg=BG)
-        self._win_id = self.viewport.create_window((0, 0), window=self.inner, anchor="nw")
+        self._window_id = self.viewport.create_window((0, 0), window=self.inner, anchor="nw")
 
         self.inner.bind("<Configure>",
                         lambda e: self.viewport.configure(
                             scrollregion=self.viewport.bbox("all")))
         self.viewport.bind("<Configure>",
-                           lambda e: self.viewport.itemconfig(self._win_id, width=e.width))
+                           lambda e: self.viewport.itemconfig(self._window_id, width=e.width))
 
         self.viewport.bind("<Button-4>", lambda e: self.viewport.yview_scroll(-1, "units"))
         self.viewport.bind("<Button-5>", lambda e: self.viewport.yview_scroll(1, "units"))
@@ -158,7 +134,7 @@ class KrasliceTab(tk.Frame):
 
         for i, ind in enumerate(self.generation.individuals):
             row, col = divmod(i, COLS)
-            panel = KraslicePanel(self.inner, ind)
+            panel = IndividualPanel(self.inner, ind)
             panel.grid(row=row, column=col, padx=8, pady=8, sticky="nsew")
             self.panels.append(panel)
 
@@ -168,5 +144,5 @@ class KrasliceTab(tk.Frame):
         self.viewport.yview_moveto(0)
 
     def _reset(self) -> None:
-        self.generation = KrasliceGeneration(NUM_INDIVIDUALS)
+        self.generation = Generation(NUM_INDIVIDUALS)
         self._populate()

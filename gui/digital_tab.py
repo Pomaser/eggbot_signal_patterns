@@ -4,7 +4,7 @@ import tkinter as tk
 from tkinter import messagebox
 from pathlib import Path
 
-from digital_individual import DigitalGeneration, DigitalIndividual, SIGNAL_TYPES
+from signals.digital import DigitalGeneration, DigitalIndividual, SIGNAL_TYPES
 from svg_renderer import save_svg
 
 # ── Layout constants ──────────────────────────────────────────────────
@@ -17,7 +17,7 @@ PREVIEW_H = 120
 SCALE_X = PREVIEW_W / CANVAS_W
 SCALE_Y = PREVIEW_H / CANVAS_H
 
-SVG_DIR = Path(__file__).parent / "svg"
+SVG_DIR = Path(__file__).parent.parent / "svg"
 
 BG = "#f0f0f0"
 PREVIEW_BG = "#ffffff"

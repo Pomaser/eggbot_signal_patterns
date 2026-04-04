@@ -10,11 +10,15 @@ python app.py
 ```
 No external dependencies — uses only Python stdlib (tkinter, math, random).
 
-**Files:**
-- `individual.py` — `Individual` class: 8-param genome + `compute_points()` + GA ops
-- `generation.py` — `Generation` class: selection/crossover/mutation
-- `svg_renderer.py` — `generate_svg()` / `save_svg()` → 3200×800 SVG
-- `app.py` — tkinter GUI: 12 individuals in 2-column scrollable grid, rating sliders, SVG export
+**Structure:**
+- `app.py` — entry point; creates `ttk.Notebook` with three tabs
+- `svg_renderer.py` — `generate_svg()` / `save_svg()` → 3200×800 SVG; accepts any object with `compute_segments()`
+- `signals/organic.py` — `Individual` (8-param wave genome + `compute_segments()`) + `Generation`
+- `signals/digital.py` — `DigitalIndividual` (square/sawtooth/triangle/PCM/staircase) + `DigitalGeneration`
+- `signals/kraslice.py` — `KrasliceIndividual` (zigzag/diamond/waves/chevron/crosshatch) + `KrasliceGeneration`
+- `gui/organic_tab.py` — `IndividualPanel` + `OrganicTab`
+- `gui/digital_tab.py` — `DigitalPanel` + `DigitalTab`
+- `gui/kraslice_tab.py` — `KraslicePanel` + `KrasliceTab`
 
 ---
 
