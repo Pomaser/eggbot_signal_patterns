@@ -6,7 +6,7 @@ from tkinter import ttk
 from gui.organic_tab import OrganicTab
 from gui.digital_tab import DigitalTab
 from gui.kraslice_tab import KrasliceTab
-from gui.truchet_tab import TruchetTab
+from gui.spirograph_tab import SpirographTab
 
 BG = "#f0f0f0"
 
@@ -24,7 +24,7 @@ class App(tk.Tk):
         notebook.add(OrganicTab(notebook), text="  Organic  ")
         notebook.add(DigitalTab(notebook), text="  Digital  ")
         notebook.add(KrasliceTab(notebook), text="  Kraslice  ")
-        notebook.add(TruchetTab(notebook), text="  Truchet  ")
+        notebook.add(SpirographTab(notebook), text="  Spirograph  ")
 
 
 def _watch_stdin(app: App) -> None:

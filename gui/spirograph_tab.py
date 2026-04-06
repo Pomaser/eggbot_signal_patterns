@@ -1,10 +1,10 @@
-"""Truchet tile tab — drop-in tk.Frame for use inside a ttk.Notebook."""
+"""Spirograph tab — drop-in tk.Frame for use inside a ttk.Notebook."""
 
 import tkinter as tk
 from tkinter import messagebox
 from pathlib import Path
 
-from signals.truchet import TruchetGeneration, TruchetIndividual
+from signals.spirograph import SpirographGeneration, SpirographIndividual
 from svg_renderer import save_svg
 
 # ── Layout constants ──────────────────────────────────────────────────
@@ -27,8 +27,8 @@ STROKE = "#1a1a1a"
 
 # ── Individual panel ──────────────────────────────────────────────────
 
-class TruchetPanel(tk.Frame):
-    def __init__(self, parent: tk.Widget, individual: TruchetIndividual, **kw):
+class SpirographPanel(tk.Frame):
+    def __init__(self, parent: tk.Widget, individual: SpirographIndividual, **kw):
         super().__init__(parent, bd=1, relief="solid", bg=BG, **kw)
         self.individual = individual
 
@@ -51,11 +51,11 @@ class TruchetPanel(tk.Frame):
 
     def _save_svg(self) -> None:
         SVG_DIR.mkdir(exist_ok=True)
-        existing = {p.stem for p in SVG_DIR.glob("truchet_*.svg")}
+        existing = {p.stem for p in SVG_DIR.glob("spirograph_*.svg")}
         n = 1
-        while f"truchet_{n:04d}" in existing:
+        while f"spirograph_{n:04d}" in existing:
             n += 1
-        path = SVG_DIR / f"truchet_{n:04d}.svg"
+        path = SVG_DIR / f"spirograph_{n:04d}.svg"
         try:
             save_svg(self.individual, str(path))
             self._flash_saved(path.name)
@@ -81,15 +81,15 @@ class TruchetPanel(tk.Frame):
             self.preview.create_line(flat, fill=STROKE, width=1, smooth=False)
 
 
-# ── Truchet tab frame ─────────────────────────────────────────────────
+# ── Spirograph tab frame ──────────────────────────────────────────────
 
-class TruchetTab(tk.Frame):
-    """Complete Truchet-tile tab content; embed in a ttk.Notebook."""
+class SpirographTab(tk.Frame):
+    """Complete spirograph tab content; embed in a ttk.Notebook."""
 
     def __init__(self, parent: tk.Widget, **kw):
         super().__init__(parent, bg=BG, **kw)
-        self.generation = TruchetGeneration(NUM_INDIVIDUALS)
-        self.panels: list[TruchetPanel] = []
+        self.generation = SpirographGeneration(NUM_INDIVIDUALS)
+        self.panels: list[SpirographPanel] = []
 
         self._build_toolbar()
         self._build_scroll_area()
@@ -107,7 +107,7 @@ class TruchetTab(tk.Frame):
 
         tk.Label(
             bar,
-            text="Quarter-arc and diagonal Truchet tiling patterns",
+            text="Hypotrochoid rosettes (spirograph curves) tiled in a grid",
             fg="#aaaaaa", bg="#2c3e50", font=("sans-serif", 9),
         ).pack(side="left", padx=10)
 
@@ -144,7 +144,7 @@ class TruchetTab(tk.Frame):
 
         for i, ind in enumerate(self.generation.individuals):
             row, col = divmod(i, COLS)
-            panel = TruchetPanel(self.inner, ind)
+            panel = SpirographPanel(self.inner, ind)
             panel.grid(row=row, column=col, padx=8, pady=8, sticky="nsew")
             self.panels.append(panel)
 
@@ -154,5 +154,5 @@ class TruchetTab(tk.Frame):
         self.viewport.yview_moveto(0)
 
     def _reset(self) -> None:
-        self.generation = TruchetGeneration(NUM_INDIVIDUALS)
+        self.generation = SpirographGeneration(NUM_INDIVIDUALS)
         self._populate()
